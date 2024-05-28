@@ -1,6 +1,7 @@
 package com.example.autoAppbackend.service;
 
 import com.example.autoAppbackend.model.Vehicle;
+import com.example.autoAppbackend.model.VehicleReservation;
 import com.example.autoAppbackend.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

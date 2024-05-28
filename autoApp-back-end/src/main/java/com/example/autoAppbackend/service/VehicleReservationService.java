@@ -19,5 +19,7 @@ public class VehicleReservationService {
         return vehicleReservationRepository.findVehicleReservationsByUserId(id);
     }
 
-
+    public VehicleReservation save(VehicleReservation vehicleReservation) {
+        return vehicleReservationRepository.save(vehicleReservation);
+    }
 }
