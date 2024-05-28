@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +57,38 @@ public class VehicleReservationController {
 
         return new ResponseEntity<>(reservationDTOs, HttpStatus.OK);
 
+    }
+
+    @PutMapping(value = "/cancel/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VehicleReservationDTO> cancelReservation(@PathVariable Integer id,@RequestBody String reason){
+        VehicleReservation reservation = vehicleReservationService.cancelReservation(id, reason);
+        VehicleReservationDTO reservationDTO = new VehicleReservationDTO(reservation);
+        return new ResponseEntity<>(reservationDTO, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/return/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VehicleReservationDTO> returnVehicle(@PathVariable Integer id, @RequestBody String state){
+        VehicleReservation reservation = vehicleReservationService.returnVehicle(id, state);
+        VehicleReservationDTO reservationDTO = new VehicleReservationDTO(reservation);
+        return new ResponseEntity<>(reservationDTO, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/pickup/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VehicleReservationDTO> pickupVehicle(@PathVariable Integer id){
+        VehicleReservation reservation = vehicleReservationService.pickupVehicle(id);
+        return new ResponseEntity<>(new VehicleReservationDTO(reservation), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/scheduled", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<VehicleReservationDTO>> getAllScheduledReservations(){
+        List<VehicleReservation> reservations = vehicleReservationService.getAllScheduledReservations();
+
+        List<VehicleReservationDTO> reservationDTOs = new ArrayList<>();
+        for(VehicleReservation r : reservations){
+            reservationDTOs.add(new VehicleReservationDTO(r));
+        }
+
+        return new ResponseEntity<>(reservationDTOs, HttpStatus.OK);
     }
 
 
