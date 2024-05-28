@@ -97,7 +97,7 @@ public class VehicleReservationController {
             @ApiResponse(responseCode = "201", description = "Created",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = VehicleReservationDTO.class)) })
     })
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VehicleReservationDTO> saveArrangement(@RequestBody VehicleReservationDTO vehicleReservationDTO) {
 
         VehicleReservation vehicleReservation = new VehicleReservation();
