@@ -1,0 +1,69 @@
+package suspiciousUserRules
+
+import com.example.autoAppbackend.model.User
+import com.example.autoAppbackend.model.VehicleReservation
+import com.example.autoAppbackend.model.ReservationStatus
+import com.example.autoAppbackend.model.VehicleType
+import java.util.List
+import java.time.Duration
+
+dialect "mvel"
+
+rule "Check if user cancelled the reservation in less than a day"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.SCHEDULED)
+        $userReservations : List() from collect (VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.CANCELLED, cancellationTime != null))
+    then
+        int cancelledWithinADayCount = 0;
+        for (Object res : $userReservations) {
+            VehicleReservation reservationClass =(VehicleReservation) res;
+            if (Duration.between(reservationClass.getReservationTime(), reservationClass.getCancellationTime()).toHours() < 24 &&
+                (reservationClass.getCancellationReason() != null && reservationClass.getCancellationReason().length() < 10)) {
+                cancelledWithinADayCount++;
+            }
+        }
+
+        if (cancelledWithinADayCount > 3) {
+            $reservation.getUser().setSuspicious(true);
+
+        }
+end
+
+rule "Check if he cancelled the reservation less than an hour before the pick-up"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.SCHEDULED)
+        $userReservations : List() from collect (VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.CANCELLED, cancellationTime != null))
+    then
+        int cancelledWithinADayCount = 0;
+        for (Object res : $userReservations) {
+            VehicleReservation reservationClass =(VehicleReservation) res;
+            if (Duration.between(reservationClass.getCancellationTime(), reservationClass.getScheduledPickupTime()).toHours() < 1 &&
+                (reservationClass.getCancellationReason() != null && reservationClass.getCancellationReason().length() < 10)) {
+                cancelledWithinADayCount++;
+            }
+        }
+
+        if (cancelledWithinADayCount > 3) {
+            $reservation.getUser().setSuspicious(true);
+
+        }
+end
+
+rule "Check if the user has ever returned a damaged vehicle"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.SCHEDULED)
+        $userReservations : List() from collect (VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.RETURNED))
+    then
+        int cancelledWithinADayCount = 0;
+        for (Object res : $userReservations) {
+            VehicleReservation reservationClass =(VehicleReservation) res;
+            if (reservationClass.getVehicleState() == VehicleType.DAMAGED) {
+                cancelledWithinADayCount++;
+            }
+        }
+
+        if (cancelledWithinADayCount > 0) {
+            $reservation.getUser().setSuspicious(true);
+
+        }
+end

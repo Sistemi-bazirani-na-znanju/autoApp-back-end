@@ -4,12 +4,17 @@ import com.example.autoAppbackend.model.ReservationStatus;
 import com.example.autoAppbackend.model.VehicleReservation;
 import com.example.autoAppbackend.model.VehicleType;
 import com.example.autoAppbackend.repository.VehicleReservationRepository;
+import org.kie.api.KieServices;
+import org.kie.api.event.rule.DebugAgendaEventListener;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -64,8 +69,26 @@ public class VehicleReservationService {
     }
 
     public List<VehicleReservation> getAllScheduledReservations(){
-        List<VehicleReservation> reservations = vehicleReservationRepository.findVehicleReservationsByStatus(ReservationStatus.SCHEDULED);
-        return reservations;
+        List<VehicleReservation> allReservations = vehicleReservationRepository.findAll();
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kieContainer = ks.getKieClasspathContainer();
+
+        KieSession kieSession = kieContainer.newKieSession("suspiciousUserSession");
+        kieSession.addEventListener(new DebugAgendaEventListener());
+
+        for (VehicleReservation reservation : allReservations) {
+            kieSession.insert(reservation);
+        }
+
+        kieSession.fireAllRules();
+        kieSession.dispose();
+
+
+        List<VehicleReservation> scheduledReservations = allReservations.stream()
+                .filter(reservation -> reservation.getStatus() == ReservationStatus.SCHEDULED)
+                .collect(Collectors.toList());
+        return scheduledReservations;
     }
 
 
