@@ -1,5 +1,6 @@
 package com.example.autoAppbackend.service;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.autoAppbackend.model.User;
@@ -16,6 +17,10 @@ public class UserService {
 
     public User getById(Long id) {
         return userRepository.findUserById(id);
+    }
+
+    public User findByEmail(String email) throws UsernameNotFoundException {
+        return userRepository.findUserByEmail(email);
     }
 
     
