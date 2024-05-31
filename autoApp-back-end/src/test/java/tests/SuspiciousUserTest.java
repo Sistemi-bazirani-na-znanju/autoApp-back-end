@@ -221,8 +221,158 @@ public class SuspiciousUserTest {
         assertThat(reservations.get(0).getUser().isSuspicious(), equalTo(false));
     }
 
+    @Test
+    public void TestMoreThanTwoDirtyVehiclesReturned(){
+
+        List<VehicleReservation> reservations = createMoreThanTwoDirtyVehiclesReturned();
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kieContainer = ks.getKieClasspathContainer();
+
+        KieSession kieSession = kieContainer.newKieSession("suspiciousUserSession");
+        kieSession.addEventListener(new DebugAgendaEventListener());
 
 
+        for (VehicleReservation reservation : reservations) {
+            kieSession.insert(reservation);
+        }
+
+        int firedRules = kieSession.fireAllRules();
+
+        var a = kieSession.getObjects();
+        kieSession.dispose();
+
+        System.out.println("More Than Two TImes Dirty vehicle");
+        System.out.println("Fired rules: " + firedRules);
+
+        System.out.println(reservations.get(0).getUser().getId().toString() + " " + reservations.get(0).getStatus() + " , reservation time: " + reservations.get(0).getReservationTime());
+        System.out.println(reservations.get(1).getUser().getId().toString() + " " + reservations.get(1).getStatus() + " , reservation time: " + reservations.get(1).getReservationTime());
+        System.out.println(reservations.get(2).getUser().getId().toString() + " " + reservations.get(2).getStatus() + " , reservation time: " + reservations.get(2).getReservationTime());
+
+        System.out.println(reservations.get(3).getUser().getId().toString() + " " + reservations.get(3).getStatus() + ", vehicle state: " + reservations.get(3).getVehicleState());
+        System.out.println(reservations.get(4).getUser().getId().toString() + " " + reservations.get(4).getStatus() + ", vehicle state: " + reservations.get(4).getVehicleState());
+        System.out.println(reservations.get(5).getUser().getId().toString() + " " + reservations.get(5).getStatus() + ", vehicle state: " + reservations.get(5).getVehicleState());
+
+
+        assertThat(reservations.get(3).getUser().isSuspicious(), equalTo(true));
+        assertThat(reservations.get(4).getUser().isSuspicious(), equalTo(true));
+        assertThat(reservations.get(5).getUser().isSuspicious(), equalTo(true));
+    }
+
+
+    @Test
+    public void TestLessThanTwoDirtyVehiclesReturned(){
+
+        List<VehicleReservation> reservations = createLessThanTwoDirtyVehiclesReturned();
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kieContainer = ks.getKieClasspathContainer();
+
+        KieSession kieSession = kieContainer.newKieSession("suspiciousUserSession");
+        kieSession.addEventListener(new DebugAgendaEventListener());
+
+
+        for (VehicleReservation reservation : reservations) {
+            kieSession.insert(reservation);
+        }
+
+        int firedRules = kieSession.fireAllRules();
+
+        var a = kieSession.getObjects();
+        kieSession.dispose();
+
+        System.out.println("Less Than Two TImes Dirty vehicle");
+        System.out.println("Fired rules: " + firedRules);
+
+        System.out.println(reservations.get(0).getUser().getId().toString() + " " + reservations.get(0).getStatus() + " , reservation time: " + reservations.get(0).getReservationTime());
+        System.out.println(reservations.get(1).getUser().getId().toString() + " " + reservations.get(1).getStatus() + " , reservation time: " + reservations.get(1).getReservationTime());
+        System.out.println(reservations.get(2).getUser().getId().toString() + " " + reservations.get(2).getStatus() + " , reservation time: " + reservations.get(2).getReservationTime());
+
+        System.out.println(reservations.get(3).getUser().getId().toString() + " " + reservations.get(3).getStatus() + ", vehicle state: " + reservations.get(3).getVehicleState());
+        System.out.println(reservations.get(4).getUser().getId().toString() + " " + reservations.get(4).getStatus() + ", vehicle state: " + reservations.get(4).getVehicleState());
+        System.out.println(reservations.get(5).getUser().getId().toString() + " " + reservations.get(5).getStatus() + ", vehicle state: " + reservations.get(5).getVehicleState());
+
+
+        assertThat(reservations.get(3).getUser().isSuspicious(), equalTo(false));
+        assertThat(reservations.get(4).getUser().isSuspicious(), equalTo(false));
+        assertThat(reservations.get(5).getUser().isSuspicious(), equalTo(false));
+    }
+
+    @Test
+    public void TestMoreThanTwoTimesLateVehiclesReturned(){
+
+        List<VehicleReservation> reservations = createMoreThanTwoTimesLateVehiclesReturned();
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kieContainer = ks.getKieClasspathContainer();
+
+        KieSession kieSession = kieContainer.newKieSession("suspiciousUserSession");
+        kieSession.addEventListener(new DebugAgendaEventListener());
+
+
+        for (VehicleReservation reservation : reservations) {
+            kieSession.insert(reservation);
+        }
+
+        int firedRules = kieSession.fireAllRules();
+
+        var a = kieSession.getObjects();
+        kieSession.dispose();
+
+        System.out.println("More Than Two Times Late vehicle");
+        System.out.println("Fired rules: " + firedRules);
+
+        System.out.println(reservations.get(0).getUser().getId().toString() + " " + reservations.get(0).getStatus() + " , reservation time: " + reservations.get(0).getReservationTime());
+        System.out.println(reservations.get(1).getUser().getId().toString() + " " + reservations.get(1).getStatus() + " , reservation time: " + reservations.get(1).getReservationTime());
+        System.out.println(reservations.get(2).getUser().getId().toString() + " " + reservations.get(2).getStatus() + " , reservation time: " + reservations.get(2).getReservationTime());
+
+        System.out.println(reservations.get(3).getUser().getId().toString() + " " + reservations.get(3).getStatus() + ", vehicle state: " + reservations.get(3).getVehicleState());
+        System.out.println(reservations.get(4).getUser().getId().toString() + " " + reservations.get(4).getStatus() + ", vehicle state: " + reservations.get(4).getVehicleState());
+        System.out.println(reservations.get(5).getUser().getId().toString() + " " + reservations.get(5).getStatus() + ", vehicle state: " + reservations.get(5).getVehicleState());
+
+
+        assertThat(reservations.get(3).getUser().isSuspicious(), equalTo(true));
+        assertThat(reservations.get(4).getUser().isSuspicious(), equalTo(true));
+        assertThat(reservations.get(5).getUser().isSuspicious(), equalTo(true));
+    }
+
+    @Test
+    public void TestLessThanTwoTimesLateVehiclesReturned(){
+
+        List<VehicleReservation> reservations = createLessThanTimesLateVehiclesReturned();
+
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kieContainer = ks.getKieClasspathContainer();
+
+        KieSession kieSession = kieContainer.newKieSession("suspiciousUserSession");
+        kieSession.addEventListener(new DebugAgendaEventListener());
+
+
+        for (VehicleReservation reservation : reservations) {
+            kieSession.insert(reservation);
+        }
+
+        int firedRules = kieSession.fireAllRules();
+
+        var a = kieSession.getObjects();
+        kieSession.dispose();
+
+        System.out.println("Less Than Two Times Late vehicle");
+        System.out.println("Fired rules: " + firedRules);
+
+        System.out.println(reservations.get(0).getUser().getId().toString() + " " + reservations.get(0).getStatus() + " , reservation time: " + reservations.get(0).getReservationTime());
+        System.out.println(reservations.get(1).getUser().getId().toString() + " " + reservations.get(1).getStatus() + " , reservation time: " + reservations.get(1).getReservationTime());
+        System.out.println(reservations.get(2).getUser().getId().toString() + " " + reservations.get(2).getStatus() + " , reservation time: " + reservations.get(2).getReservationTime());
+
+        System.out.println(reservations.get(3).getUser().getId().toString() + " " + reservations.get(3).getStatus() + ", vehicle state: " + reservations.get(3).getVehicleState());
+        System.out.println(reservations.get(4).getUser().getId().toString() + " " + reservations.get(4).getStatus() + ", vehicle state: " + reservations.get(4).getVehicleState());
+        System.out.println(reservations.get(5).getUser().getId().toString() + " " + reservations.get(5).getStatus() + ", vehicle state: " + reservations.get(5).getVehicleState());
+
+
+        assertThat(reservations.get(3).getUser().isSuspicious(), equalTo(false));
+        assertThat(reservations.get(4).getUser().isSuspicious(), equalTo(false));
+        assertThat(reservations.get(5).getUser().isSuspicious(), equalTo(false));
+    }
 
     //***********************Pomocne funkcije**********************************
 
@@ -379,5 +529,213 @@ public class SuspiciousUserTest {
         res.setVehicleState(reservation.getVehicleState());
         res.setStatus(reservation.getStatus());
         return res;
+    }
+
+    private List<VehicleReservation> createMoreThanTwoDirtyVehiclesReturned(){
+        List<VehicleReservation> reservations = new ArrayList<>();
+        VehicleReservation scheduledReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,10,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                null,
+                VehicleType.OTHER,
+                ReservationStatus.SCHEDULED
+        );
+
+        VehicleReservation scheduledReservation1 = createReservation(1, scheduledReservation);
+        VehicleReservation scheduledReservation2 = createReservation(2, scheduledReservation);
+        VehicleReservation scheduledReservation3 = createReservation(3, scheduledReservation);
+
+        VehicleReservation returnedReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,0,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                LocalDateTime.of(2024,6,3,14,0, 0),
+                VehicleType.DIRTY,
+                ReservationStatus.RETURNED
+        );
+
+        VehicleReservation returnedReservation1 = createReservation(4,returnedReservation);
+        VehicleReservation returnedReservation2 = createReservation(5,returnedReservation);
+        VehicleReservation returnedReservation3 = createReservation(6,returnedReservation);
+
+        reservations.add(scheduledReservation1);
+        reservations.add(scheduledReservation2);
+        reservations.add(scheduledReservation3);
+        reservations.add(returnedReservation1);
+        reservations.add(returnedReservation2);
+        reservations.add(returnedReservation3);
+        return reservations;
+    }
+
+
+    private List<VehicleReservation> createLessThanTwoDirtyVehiclesReturned(){
+        List<VehicleReservation> reservations = new ArrayList<>();
+        VehicleReservation scheduledReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,10,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                null,
+                VehicleType.OTHER,
+                ReservationStatus.SCHEDULED
+        );
+
+        VehicleReservation scheduledReservation1 = createReservation(1, scheduledReservation);
+        VehicleReservation scheduledReservation2 = createReservation(2, scheduledReservation);
+        VehicleReservation scheduledReservation3 = createReservation(3, scheduledReservation);
+
+        VehicleReservation returnedDirtyReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,0,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                LocalDateTime.of(2024,6,3,14,0, 0),
+                VehicleType.DIRTY,
+                ReservationStatus.RETURNED
+        );
+
+        VehicleReservation returnedCleanReservation = new VehicleReservation(
+            createVehicle(),
+            createUser(),
+            LocalDateTime.of(2024,5,27,0,0,0),
+            null,
+            null,
+            LocalDateTime.of(2024,6,1,11,0, 0),
+            LocalDateTime.of(2024,6,3,15,0, 0),
+            LocalDateTime.of(2024,6,3,14,0, 0),
+            VehicleType.FULLY_FUNCTIONAL,
+            ReservationStatus.RETURNED
+    );
+
+        VehicleReservation returnedReservation1 = createReservation(4,returnedDirtyReservation);
+        VehicleReservation returnedReservation2 = createReservation(5,returnedDirtyReservation);
+        VehicleReservation returnedReservation3 = createReservation(6,returnedCleanReservation);
+
+        reservations.add(scheduledReservation1);
+        reservations.add(scheduledReservation2);
+        reservations.add(scheduledReservation3);
+        reservations.add(returnedReservation1);
+        reservations.add(returnedReservation2);
+        reservations.add(returnedReservation3);
+        return reservations;
+    }
+
+    private List<VehicleReservation> createMoreThanTwoTimesLateVehiclesReturned(){
+        List<VehicleReservation> reservations = new ArrayList<>();
+        VehicleReservation scheduledReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,10,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                null,
+                VehicleType.OTHER,
+                ReservationStatus.SCHEDULED
+        );
+
+        VehicleReservation scheduledReservation1 = createReservation(1, scheduledReservation);
+        VehicleReservation scheduledReservation2 = createReservation(2, scheduledReservation);
+        VehicleReservation scheduledReservation3 = createReservation(3, scheduledReservation);
+
+        VehicleReservation returnedReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,0,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                LocalDateTime.of(2024,6,4,14,0, 0),
+                VehicleType.FULLY_FUNCTIONAL,
+                ReservationStatus.RETURNED
+        );
+
+        VehicleReservation returnedReservation1 = createReservation(4,returnedReservation);
+        VehicleReservation returnedReservation2 = createReservation(5,returnedReservation);
+        VehicleReservation returnedReservation3 = createReservation(6,returnedReservation);
+
+        reservations.add(scheduledReservation1);
+        reservations.add(scheduledReservation2);
+        reservations.add(scheduledReservation3);
+        reservations.add(returnedReservation1);
+        reservations.add(returnedReservation2);
+        reservations.add(returnedReservation3);
+        return reservations;
+    }
+
+
+    private List<VehicleReservation> createLessThanTimesLateVehiclesReturned(){
+        List<VehicleReservation> reservations = new ArrayList<>();
+        VehicleReservation scheduledReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,10,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                null,
+                VehicleType.OTHER,
+                ReservationStatus.SCHEDULED
+        );
+
+        VehicleReservation scheduledReservation1 = createReservation(1, scheduledReservation);
+        VehicleReservation scheduledReservation2 = createReservation(2, scheduledReservation);
+        VehicleReservation scheduledReservation3 = createReservation(3, scheduledReservation);
+
+        VehicleReservation returnedDirtyReservation = new VehicleReservation(
+                createVehicle(),
+                createUser(),
+                LocalDateTime.of(2024,5,27,0,0,0),
+                null,
+                null,
+                LocalDateTime.of(2024,6,1,11,0, 0),
+                LocalDateTime.of(2024,6,3,15,0, 0),
+                LocalDateTime.of(2024,6,4,14,0, 0),
+                VehicleType.FULLY_FUNCTIONAL,
+                ReservationStatus.RETURNED
+        );
+
+        VehicleReservation returnedCleanReservation = new VehicleReservation(
+            createVehicle(),
+            createUser(),
+            LocalDateTime.of(2024,5,27,0,0,0),
+            null,
+            null,
+            LocalDateTime.of(2024,6,1,11,0, 0),
+            LocalDateTime.of(2024,6,3,15,0, 0),
+            LocalDateTime.of(2024,6,3,14,0, 0),
+            VehicleType.FULLY_FUNCTIONAL,
+            ReservationStatus.RETURNED
+    );
+
+        VehicleReservation returnedReservation1 = createReservation(4,returnedDirtyReservation);
+        VehicleReservation returnedReservation2 = createReservation(5,returnedDirtyReservation);
+        VehicleReservation returnedReservation3 = createReservation(6,returnedCleanReservation);
+
+        reservations.add(scheduledReservation1);
+        reservations.add(scheduledReservation2);
+        reservations.add(scheduledReservation3);
+        reservations.add(returnedReservation1);
+        reservations.add(returnedReservation2);
+        reservations.add(returnedReservation3);
+        return reservations;
     }
 }
