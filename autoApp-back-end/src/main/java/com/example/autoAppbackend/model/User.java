@@ -1,6 +1,5 @@
 package com.example.autoAppbackend.model;
 
-import com.beust.jcommander.internal.Nullable;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

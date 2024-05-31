@@ -1,7 +1,6 @@
 package com.example.autoAppbackend.dto;
 
 import com.example.autoAppbackend.model.ReservationStatus;
-import com.example.autoAppbackend.model.Vehicle;
 import com.example.autoAppbackend.model.VehicleReservation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

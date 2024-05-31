@@ -1,7 +1,5 @@
 package com.example.autoAppbackend.controller;
 
-import com.example.autoAppbackend.dto.UserDTO;
-import com.example.autoAppbackend.dto.VehicleDTO;
 import com.example.autoAppbackend.dto.VehicleReservationDTO;
 import com.example.autoAppbackend.model.User;
 import com.example.autoAppbackend.model.Vehicle;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
