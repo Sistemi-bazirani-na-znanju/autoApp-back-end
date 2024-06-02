@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+
+    <kbase name="suspiciousUser" packages="suspiciousUserRules">
+        <ksession name="suspiciousUserSession"/>
+    </kbase>
+
+     <kbase name="loans" packages="loanRules">
+        <ksession name="loanRulesSession"/>
+    </kbase>
+
+
+</kmodule>

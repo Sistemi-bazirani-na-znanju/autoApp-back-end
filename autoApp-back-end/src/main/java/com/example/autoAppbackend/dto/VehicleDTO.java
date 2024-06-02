@@ -7,20 +7,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class VehicleDTO {
     
+    private Integer id;
     private String modelName;
     private VehicleType currentState;
     private double price;
     private String imageURL;
 
     public VehicleDTO(Vehicle vehicle) {
+        this.id = vehicle.getId();
         this.modelName = vehicle.getModelName();
-        this.currentState =vehicle.getCurrentState();
+        this.currentState = vehicle.getCurrentState();
         this.price = vehicle.getPrice();
         this.imageURL = vehicle.getImageURL();
     }

@@ -1,0 +1,75 @@
+package suspiciousUserRules
+
+import com.example.autoAppbackend.model.User
+import com.example.autoAppbackend.model.VehicleReservation
+import com.example.autoAppbackend.model.ReservationStatus
+import com.example.autoAppbackend.model.VehicleType
+import java.util.List
+import java.time.Duration
+
+dialect "mvel"
+
+
+rule "Check if user cancelled the reservation in less than a day"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.SCHEDULED)
+        $cancelledWithinADayCount : Number(intValue > 3) from accumulate(
+            $res : VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.CANCELLED, cancellationTime != null,
+                Duration.between(reservationTime, cancellationTime).toHours < 24,
+                cancellationReason != null && cancellationReason.length() < 10),
+            count($res)
+        )
+    then
+        $reservation.getUser().setSuspicious(true);
+end
+
+rule "Check if he cancelled the reservation less than an hour before the pick-up"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.SCHEDULED)
+        $cancelledWithinADayCount : Number(intValue > 3) from accumulate(
+            $res : VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.CANCELLED, cancellationTime != null,
+                Duration.between(cancellationTime, scheduledPickupTime).toHours < 1,
+                cancellationReason != null && cancellationReason.length() < 10),
+            count($res)
+        )
+    then
+        $reservation.getUser().setSuspicious(true);
+end
+
+rule "Check if the user has ever returned a damaged vehicle"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.SCHEDULED)
+        $cancelledWithinADayCount : Number(intValue > 0) from accumulate(
+            $res : VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.RETURNED,
+                vehicleState == VehicleType.DAMAGED),
+            count($res)
+        )
+    then
+        $reservation.getUser().setSuspicious(true);
+end
+
+rule "Check if the user has returned a dirty vehicle"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.RETURNED)
+        $dirtyVehicleCount : Number(intValue > 2) from accumulate(
+            $res : VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.RETURNED,
+                vehicleState == VehicleType.DIRTY),
+            count($res)
+        )
+    then
+        System.out.println("User has returned a dirty vehicle");
+        $reservation.getUser().setSuspicious(true);
+end
+
+rule "Check if user returned the vehicle late"
+    when
+        $reservation : VehicleReservation(status == ReservationStatus.RETURNED)
+        $lateReturnCount : Number(intValue > 2) from accumulate(
+            $res : VehicleReservation(user.id == $reservation.user.id, status == ReservationStatus.RETURNED,
+                actualReturnTime.isAfter(scheduledReturnTime)),
+            count($res)
+        )
+    then
+        System.out.println("User returned the vehicle late");
+        $reservation.getUser().setSuspicious(true);
+end

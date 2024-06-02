@@ -1,0 +1,43 @@
+package loanRules
+
+import com.example.autoAppbackend.model.User
+import com.example.autoAppbackend.model.VehicleReservation
+import com.example.autoAppbackend.model.ReservationStatus
+import com.example.autoAppbackend.model.VehicleType
+import com.example.autoAppbackend.model.Loan
+import com.example.autoAppbackend.model.UserEmploymentStatus
+import com.example.autoAppbackend.util.Doubble;
+
+import java.util.List
+import java.time.Duration
+
+global Doubble costAlready;
+
+query "decideIfCapable"
+    $loan: Loan( user != null ) and
+    mustBeEmployed() and
+    stableIncome() and 
+    isntTooOld() and
+    stableIncomeAfterSpendings()
+end
+
+query mustBeEmployed()
+    $loan: Loan( user != null ) and
+    eval($loan.getStatus() != UserEmploymentStatus.UNEMPLOYED)
+end
+
+query stableIncome()
+    $loan: Loan( user != null ) and 
+    eval($loan.getSalary() * 0.3 >= $loan.getAmount() / $loan.getNumberOfInstallments())
+
+end
+
+query isntTooOld()
+    $loan: Loan( user != null ) and
+    eval($loan.getAge() < 60)
+end
+
+query stableIncomeAfterSpendings()
+    $loan: Loan( user != null ) and 
+    eval($loan.getSalary() * 0.3 >=( $loan.getAmount() / $loan.getNumberOfInstallments() + costAlready.getNumber()))
+end

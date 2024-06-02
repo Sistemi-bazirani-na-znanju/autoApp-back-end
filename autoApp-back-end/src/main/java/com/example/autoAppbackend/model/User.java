@@ -33,15 +33,22 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.EAGER)
     private Role role;
 
+    @Column(name = "new")
+    private boolean isNew;
+
+    @Column(name = "is_suspicious")
+    private boolean isSuspicious;
+
     public User() {
     }
 
-    public User(Long id, String email, String password, String firstName, String lastName) {
+    public User(Long id, String email, String password, String firstName, String lastName, boolean isSuspicious) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.isSuspicious = isSuspicious;
     }
 
     @Override
@@ -75,4 +82,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

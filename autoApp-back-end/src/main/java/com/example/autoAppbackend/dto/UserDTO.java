@@ -12,17 +12,20 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String role;
+    private boolean isNew;
+    private boolean isSuspicious;
 
     public UserDTO(User user) {
-        this(user.getId(), user.getEmail(), user.getPassword(), user.getFirstName(),user.getLastName(), user.getRole().getName());
+        this(user.getId(), user.getEmail(), user.getPassword(), user.getFirstName(),user.getLastName(), user.getRole().getName(), user.isSuspicious());
     }
 
-    public UserDTO(Long id, String email, String password, String firstName, String lastName, String role) {
+    public UserDTO(Long id, String email, String password, String firstName, String lastName, String role, boolean isSuspicious) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
+        this.isSuspicious = isSuspicious;
     }
 }
