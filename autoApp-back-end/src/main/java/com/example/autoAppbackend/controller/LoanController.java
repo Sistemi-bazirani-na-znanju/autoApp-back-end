@@ -70,6 +70,8 @@ public class LoanController {
         loan.setStartDate(loanCreationDTO.getStartDate());
         loan.setNumberOfInstallments(loanCreationDTO.getNumberOfInstallments());
         loan.setStatus(loanCreationDTO.getStatus());
+        loan.setSalary(loanCreationDTO.getSalary());
+        loan.setAge(loanCreationDTO.getAge());
 
         LoanDTO createdLoan = new LoanDTO(loanService.create(loan));
         return new ResponseEntity<>(createdLoan, HttpStatus.CREATED);

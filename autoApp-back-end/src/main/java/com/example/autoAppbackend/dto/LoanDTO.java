@@ -22,6 +22,8 @@ public class LoanDTO {
     private UserEmploymentStatus status;
     private LocalDateTime employmentStartDate;
     private LocalDateTime employmentEndDate;
+    private double salary;
+    private int age;
 
     public LoanDTO(Loan loan){
         this.id = loan.getId();
@@ -34,5 +36,8 @@ public class LoanDTO {
         this.employmentStartDate = loan.getEmploymentStartDate();
         this.employmentEndDate = loan.getEmploymentEndDate();
         this.status = loan.getStatus();
+        this.salary = loan.getSalary();
+        this.age = loan.getAge();
+        
     }
 }
